@@ -12,7 +12,7 @@ Example
 =======
 Below is a reverse proxy example of `www.google.com`:
 ```
-var NRP = require('./lib/nrp.js');
+var NRP = require('nrp2');
 
 var google = new NRP({
     host: 'www.google.com', // the DOMAIN that will be proxied
