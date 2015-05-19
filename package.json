@@ -1,0 +1,25 @@
+{
+  "name": "nrp2",
+  "version": "0.1.1",
+  "description": "a reverse proxy with no third dependencies",
+  "main": "index.js",
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/isayme/nrp.git"
+  },
+  "keywords": [
+    "reverse",
+    "proxy"
+  ],
+  "author": "iSayme <isaymeorg@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/isayme/nrp/issues"
+  }
+}

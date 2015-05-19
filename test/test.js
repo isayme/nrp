@@ -1,65 +1,115 @@
 var http = require('http');
 var https = require('https');
-var NRP = require('../lib/nrp.js');
+var NRP = require('../index.js');
+var assert = require('assert');
 
-var p1 = new NRP({
+var p1 = NRP({
     host: 'httpbin.org',
     port: 80
 });
+p1.listen(8000);
 
-p1.listen(80);
-
-var p2 = new NRP({
+var p2 = NRP({
     ssl: true,
-    key: './nrp-key.pem',
-    cert: './nrp-cert.pem',
+    key: './test/nrp-key.pem',
+    cert: './test/nrp-cert.pem',
     host: 'httpbin.org',
     port: 443
 });
-p2.listen(443);
+p2.listen(4443);
 
-var req1 = http.request({
-  host: '127.0.0.1',
-  path: '/user-agent',
-  headers: {
-    'user-agent': 'NRP agent1'
-  }
-}, function(res) {
-  var data = '';
+function get_test(done, http, port) {
+  var req = http.request({
+    path: '/user-agent',
+    port: port,
+    rejectUnauthorized: false,
+    headers: {
+      'user-agent': 'NRP Agent'
+    }
+  }, function(res) {
+    var data = '';
 
-  res.on('data', function(d) {
-    data += d;
+    res.on('data', function(d) {
+      data += d;
+    });
+
+    res.on('end', function() {
+      var jd = JSON.parse(data);
+      assert.equal(jd['user-agent'], 'NRP Agent');
+      done();
+    })
   });
 
-  res.on('end', function() {
-    var jd = JSON.parse(data);
-
-    console.log('HTTP test return: ' + (jd['user-agent'] === 'NRP agent1'));
+  req.on('error', function(e) {
+    assert.ifError(e);
+    done();
   })
+  req.end();
+}
+
+describe('HTTP GET', function() {
+  it('user-agent should be `NRP Agent`', function(done) {
+    get_test(done, http, 8000);
+  });
 });
-req1.end();
 
-var req2 = https.request({
-  host: '127.0.0.1',
-  path: '/user-agent',
-  port: 443,
-  rejectUnauthorized: false,
-  headers: {
-    'user-agent': 'NRP agent2'
+describe('HTTPS GET', function() {
+  it('user-agent should be `NRP Agent`', function(done) {
+    get_test(done, https, 4443);
+  });
+});
+
+
+function post_test(done, http, port) {
+  var data = {
+    'custname': 'isayme',
+    'custtel': '88888888',
+    'custemail': 'isaymeorg@gmail.com',
   }
-}, function(res) {
-  var data = '';
 
-  res.on('data', function(d) {
-    data += d;
+  data = require('querystring').stringify(data);  
+  var req = http.request({
+    method: 'POST',
+    path: '/post',
+    rejectUnauthorized: false,
+    port: port,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',  
+      'Content-Length': data.length  
+    }
+  }, function(res) {
+    var data = '';
+
+    res.on('data', function(d) {
+      data += d;
+    });
+
+    res.on('end', function() {
+      var posts = JSON.parse(data);
+      var forms = posts['form'];
+      assert.equal(forms['custname'], 'isayme');
+      assert.equal(forms['custtel'], '88888888');
+      assert.equal(forms['custemail'], 'isaymeorg@gmail.com');
+      done();
+    });
   });
 
-  res.on('end', function() {
-    var jd = JSON.parse(data);
-
-    console.log('HTTPS test return: ' + (jd['user-agent'] === 'NRP agent2'));
+  req.on('error', function(e) {
+    assert.ifError(e);
+    done();
   })
-});
-req2.end();
+  req.write(data);
+  req.end();
+}
 
-console.log('press Ctrl+C to exit the test.')
+describe('HTTP POST', function() {
+  it('return data should include post data', function(done) {
+    post_test(done, http, 8000);
+  });
+});
+
+describe('HTTPS POST', function() {
+  it('return data should include post data', function(done) {
+    post_test(done, https, 4443);
+  });
+});
