@@ -1,6 +1,6 @@
 nrp
 ===
-This is reverse proxy in Node.js.
+A reverse proxy in Node.js.
 
 Install
 =======
@@ -17,7 +17,7 @@ var NRP = require('nrp2');
 var google = new NRP({
     host: 'www.google.com', // the DOMAIN that will be proxied
     port: 443,              // the PORT of the DOMAIN, default 80/443
-    ssl: true,              // use HTTPS of not, default false
+    ssl: true,              // use HTTPS or not, default false
     key: 'nrp-key.pem',     // only used when SSL is true, see more detail below section
     cert: 'nrp-cert.pem',   // only used when SSL is true, see more detail below section
 });
