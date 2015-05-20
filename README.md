@@ -10,7 +10,7 @@ npm install nrp2
 
 Example
 =======
-Below is a reverse proxy example of `www.google.com`:
+Below is a reverse proxy example of `https://www.google.com`:
 ```
 var NRP = require('nrp2');
 

@@ -1,7 +1,7 @@
 {
   "name": "nrp2",
-  "version": "0.1.1",
-  "description": "a reverse proxy with no third dependencies",
+  "version": "0.1.2",
+  "description": "a reverse proxy with no third dependency",
   "main": "index.js",
   "devDependencies": {
     "mocha": "*"
