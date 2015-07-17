@@ -1,6 +1,6 @@
 {
   "name": "nrp2",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "a reverse proxy with no third dependency",
   "main": "index.js",
   "devDependencies": {

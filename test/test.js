@@ -4,8 +4,7 @@ var NRP = require('../index.js');
 var assert = require('assert');
 
 var p1 = NRP({
-    host: 'httpbin.org',
-    port: 80
+    host: 'http://httpbin.org',
 });
 p1.listen(8000);
 
@@ -13,8 +12,7 @@ var p2 = NRP({
     ssl: true,
     key: './test/nrp-key.pem',
     cert: './test/nrp-cert.pem',
-    host: 'httpbin.org',
-    port: 443
+    host: 'https://httpbin.org',
 });
 p2.listen(4443);
 
